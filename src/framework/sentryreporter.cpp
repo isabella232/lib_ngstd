@@ -17,22 +17,20 @@ SentryReporter::~SentryReporter()
 
 void SentryReporter::init(bool enabled, const QString &sentryKey)
 {
+    m_enabled = enabled;
+
     if (!sentryKey.isEmpty()) {
         m_options = sentry_options_new();
         sentry_options_set_release(m_options, QString::number(NGLIB_VERSION_NUMBER).toLocal8Bit().data());
         sentry_options_set_dsn(m_options, sentryKey.toLocal8Bit().data());
         sentry_options_set_database_path(m_options, getConfigPath(sentryKey).toLocal8Bit().data());
-        m_enabled = !sentry_init(m_options); // sentry_init returns 0 on success
-    }
-    else if (!enabled)
-    {
-        m_enabled = false;
+        m_initialized = !sentry_init(m_options); // sentry_init returns 0 on success
     }
 }
 
 void SentryReporter::sendMessage(const QString &message, Level level /* = Level::Info */)
 {
-    if (!m_enabled) {
+    if (!m_enabled || !m_initialized) {
         return;
     }
 

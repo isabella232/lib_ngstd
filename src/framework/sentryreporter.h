@@ -41,6 +41,7 @@ private:
     QString getConfigPath(const QString &sentryKey) const;
 
     bool m_enabled = false;
+    bool m_initialized = false;
     sentry_options_t *m_options;
 };
 
