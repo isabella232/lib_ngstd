@@ -34,10 +34,11 @@ public:
     void sendMessage(const QString &message, Level level = Level::Info);
 
 private:
-    SentryReporter();
+    SentryReporter() = default;
     ~SentryReporter();
 
     sentry_level_e toNativeLevel(Level level);
+    QString getConfigPath(const QString &sentryKey) const;
 
     bool m_enabled = false;
     sentry_options_t *m_options;
